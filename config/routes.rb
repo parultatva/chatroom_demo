@@ -3,7 +3,11 @@ Rails.application.routes.draw do
 	  skip_controllers :authorizations, :applications,
 	    :authorized_applications
 	end
-  devise_for :users
+  # devise_for :users
+  devise_for :users, controllers: {
+           :sessions => "users/sessions",
+           :registrations => "users/registrations" }
+
 
   resources :chatrooms do
     resource :chatroom_users
