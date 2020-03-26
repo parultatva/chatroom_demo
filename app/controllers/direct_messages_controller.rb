@@ -14,12 +14,21 @@ class DirectMessagesController < ApplicationController
 
 
     # serialized_data = 
+    # json_response({
+    #   success: true,
+    #   data: {
+    #     messages: ActiveModel::Serializer::CollectionSerializer.new(@chatroom,serializer: ChatroomSerializer),
+    #   }
+    # }, 200)
+
     json_response({
       success: true,
       data: {
-        messages: ActiveModel::Serializer::CollectionSerializer.new(@messages,serializer: MessageSerializer),
+        chatroom: ActiveModelSerializers::SerializableResource.new(@chatroom,serializer: ChatroomSerializer),
       }
     }, 200)
+
+    
     # render "chatrooms/show"
   end
 end
