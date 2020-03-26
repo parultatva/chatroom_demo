@@ -3,6 +3,7 @@ Rails.application.routes.draw do
 	  skip_controllers :authorizations, :applications,
 	    :authorized_applications
 	end
+  mount ActionCable.server => '/cable'
   # devise_for :users
   devise_for :users, controllers: {
            :sessions => "users/sessions",
