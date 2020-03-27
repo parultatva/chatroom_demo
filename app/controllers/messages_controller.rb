@@ -26,7 +26,7 @@ class MessagesController < ApplicationController
       data: {
         messages: ActiveModelSerializers::SerializableResource.new(message,serializer: MessageSerializer),
       }
-    }, 200)
+    }, 101)
     MessageRelayJob.perform_later(message)
   end
 
