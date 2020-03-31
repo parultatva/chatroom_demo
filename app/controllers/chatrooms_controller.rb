@@ -33,7 +33,7 @@ class ChatroomsController < ApplicationController
     @chatroom = Chatroom.new(chatroom_params)
     if @chatroom.save
       @chatroom.chatroom_users.where(user_id: current_user.id).first_or_create
-      msg = { :status => "ok", :message => "Success!", :html => "Chatroom was successfully created." }
+      msg = { :status => "ok", :data => @chatroom, :message => "Success!", :html => "Chatroom was successfully created." }
       # format.html { redirect_to @chatroom, notice: 'Chatroom was successfully created.' }
       # format.json { render :show, status: :created, location: @chatroom }
       # format.json  { render :json => msg }
@@ -49,16 +49,15 @@ class ChatroomsController < ApplicationController
   # PATCH/PUT /chatrooms/1
   # PATCH/PUT /chatrooms/1.json
   def update
-    respond_to do |format|
-      if @chatroom.update(chatroom_params)
-        # format.html { redirect_to @chatroom, notice: 'Chatroom was successfully updated.' }
-        # format.json { render :show, status: :ok, location: @chatroom }
-        msg = { :status => "ok", :message => "Success!", :html => "Chatroom was successfully updated." }
-        format.json  { render :json => msg }
-      else
-        # format.html { render :edit }
-        format.json { render json: @chatroom.errors, status: :unprocessable_entity }
-      end
+    if @chatroom.update(chatroom_params)
+      # format.html { redirect_to @chatroom, notice: 'Chatroom was successfully updated.' }
+      # format.json { render :show, status: :ok, location: @chatroom }
+      msg = { :status => "ok", :data => @chatroom, :message => "Success!", :html => "Chatroom was successfully updated." }
+      render :json => msg
+    else
+      # format.html { render :edit }
+      msg = { status: :unprocessable_entity, :json => @chatroom.errors }
+      render :json => msg
     end
   end
 
@@ -66,12 +65,10 @@ class ChatroomsController < ApplicationController
   # DELETE /chatrooms/1.json
   def destroy
     @chatroom.destroy
-    respond_to do |format|
       # format.html { redirect_to chatrooms_url, notice: 'Chatroom was successfully destroyed.' }
       # format.json { head :no_content }
       msg = { :status => "ok", :message => "Success!", :html => "Chatroom was successfully destroyed." }
-      format.json  { render :json => msg }
-    end
+      render :json => msg
   end
 
   def joins_channel
