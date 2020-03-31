@@ -31,18 +31,18 @@ class ChatroomsController < ApplicationController
   # POST /chatrooms.json
   def create
     @chatroom = Chatroom.new(chatroom_params)
-    respond_to do |format|
-
-      if @chatroom.save
-        @chatroom.chatroom_users.where(user_id: current_user.id).first_or_create
-        msg = { :status => "ok", :message => "Success!", :html => "Chatroom was successfully created." }
-        # format.html { redirect_to @chatroom, notice: 'Chatroom was successfully created.' }
-        # format.json { render :show, status: :created, location: @chatroom }
-        format.json  { render :json => msg }
-      else
-        # format.html { render :new }
-        format.json { render json: @chatroom.errors, status: :unprocessable_entity }
-      end
+    if @chatroom.save
+      @chatroom.chatroom_users.where(user_id: current_user.id).first_or_create
+      msg = { :status => "ok", :message => "Success!", :html => "Chatroom was successfully created." }
+      # format.html { redirect_to @chatroom, notice: 'Chatroom was successfully created.' }
+      # format.json { render :show, status: :created, location: @chatroom }
+      # format.json  { render :json => msg }
+      render :json => msg
+    else
+      # format.html { render :new }
+      # format.json { render json: @chatroom.errors, status: :unprocessable_entity }
+      msg = { status: :unprocessable_entity, :json => @chatroom.errors }
+      render :json => msg
     end
   end
 

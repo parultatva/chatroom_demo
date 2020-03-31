@@ -3,18 +3,19 @@ module ApplicationCable
     identified_by :current_user
 
     def connect
-      self.current_user = find_verified_user
-      logger.add_tags "ActionCable", "User #{current_user.id}"
+      self.current_user = authenticate!
     end
 
     protected
 
-      def find_verified_user
-        if current_user = env['warden'].user
-          current_user
-        else
-          reject_unauthorized_connection
-        end
-      end
+    def authenticate!
+      user = User.find_by(id: doorkeeper_token.try(:resource_owner_id))
+
+      user || reject_unauthorized_connection
+    end
+
+    def doorkeeper_token
+      ::Doorkeeper.authenticate(request)
+    end
   end
 end
