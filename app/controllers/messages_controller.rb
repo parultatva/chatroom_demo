@@ -21,13 +21,19 @@ class MessagesController < ApplicationController
     message.user = current_user
     message.save
     # render :json => message
-    json_response({
-      success: true,
-      data: {
-        messages: ActiveModelSerializers::SerializableResource.new(message,serializer: MessageSerializer),
-      }
-    }, 200)
-    MessageRelayJob.perform_later(message)
+    # json_response({
+    #   success: true,
+    #   data: {
+    #     messages: ActiveModelSerializers::SerializableResource.new(message,serializer: MessageSerializer),
+    #   }
+    # }, 200)
+    # MessageRelayJob.perform_later(message)
+    ActionCable.server.broadcast "chatrooms:#{message.chatroom.id}", {
+      username: message.user.username,
+      body: message.body,
+      chatroom_id: message.chatroom.id
+    }
+    head :ok
   end
 
   private
