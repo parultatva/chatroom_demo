@@ -12,8 +12,8 @@ class ChatroomsChannel < ApplicationCable::Channel
 
   def speak(message)
     puts "#{message}"
-    @chatroom = Chatroom.find(message[:channelId])
-    message = @chatroom.messages.new(body: message[:body] )
+    @chatroom = Chatroom.find(message["channelId"])
+    message = @chatroom.messages.new(body: message["body"] )
     message.user = current_user
     message.save
     ActionCable.server.broadcast "chatrooms:#{message.chatroom.id}", {
