@@ -10,9 +10,17 @@ class ChatroomsChannel < ApplicationCable::Channel
     stop_all_streams
   end
 
-  def send_message(data)
-    @chatroom = Chatroom.find(data["chatroom_id"])
-    message   = @chatroom.messages.create(body: data["body"], user: current_user)
-    MessageRelayJob.perform_later(message)
+  def speak(message)
+    puts "#{message}"
+    @chatroom = Chatroom.find(message[:channelId])
+    message = @chatroom.messages.new(body: message[:body] )
+    message.user = current_user
+    message.save
+    ActionCable.server.broadcast "chatrooms:#{message.chatroom.id}", {
+      username: message.user.username,
+      body: message.body,
+      chatroom_id: message.chatroom.id
+    }
+    head :ok
   end
 end
