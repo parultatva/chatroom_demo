@@ -18,8 +18,11 @@ class MessagesController < ApplicationController
 
   def index
     message = @chatroom.messages.new(body: params[:body])
+
     message.user = current_user
     message.save
+    # message = @chatroom.messages.new(body: params[:message][:body])
+    # message.attachments.create(avatar: params[:message][:attachment_attributes][:avatar])
     # render :json => message
     # json_response({
     #   success: true,

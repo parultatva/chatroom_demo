@@ -15,7 +15,15 @@ class ChatroomsController < ApplicationController
     @messages = @chatroom.messages.order(created_at: :desc).limit(100).reverse
     puts "=====#{current_user.inspect}======"
     @chatroom_user = current_user.chatroom_users.find_by(chatroom_id: @chatroom.id)
-    render :json => @messages
+    # render :json => @messages
+    render json: @chatroom, include: 'messages,messages.attachments'
+    # json_response({
+    #   success: true,
+    #   data: {
+    #     chatroom: ActiveModelSerializers::SerializableResource.new(@chatroom,serializer: ChatroomSerializer),
+    #   }
+    # }, 200)
+
   end
 
   # GET /chatrooms/new

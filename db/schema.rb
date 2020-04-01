@@ -10,10 +10,20 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20200324133459) do
+ActiveRecord::Schema.define(version: 20200401060652) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "attachments", force: :cascade do |t|
+    t.integer  "message_id"
+    t.string   "avatar"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+    t.string   "mime_type"
+    t.string   "file_extension"
+    t.index ["message_id"], name: "index_attachments_on_message_id", using: :btree
+  end
 
   create_table "chatroom_users", force: :cascade do |t|
     t.integer  "chatroom_id"
@@ -74,6 +84,7 @@ ActiveRecord::Schema.define(version: 20200324133459) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "attachments", "messages"
   add_foreign_key "chatroom_users", "chatrooms"
   add_foreign_key "chatroom_users", "users"
   add_foreign_key "messages", "chatrooms"

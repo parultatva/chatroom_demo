@@ -8,25 +8,14 @@ class DirectMessagesController < ApplicationController
     @messages = @chatroom.messages.order(created_at: :desc).limit(100).reverse
     @chatroom_user = current_user.chatroom_users.find_by(chatroom_id: @chatroom.id)
     # render :json => @messages
-    # serialized_data = ActiveModelSerializers::Adapter::Json.new(
-    #     MessageSerializer.new(@messages)
-    #   ).serializable_hash
 
-
-    # serialized_data = 
     # json_response({
     #   success: true,
     #   data: {
-    #     messages: ActiveModel::Serializer::CollectionSerializer.new(@chatroom,serializer: ChatroomSerializer),
+    #     chatroom: ActiveModelSerializers::SerializableResource.new(@chatroom,serializer: ChatroomSerializer),
     #   }
     # }, 200)
-
-    json_response({
-      success: true,
-      data: {
-        chatroom: ActiveModelSerializers::SerializableResource.new(@chatroom,serializer: ChatroomSerializer),
-      }
-    }, 200)
+    render json: @chatroom, include: 'messages,messages.attachments'
 
     
     # render "chatrooms/show"
