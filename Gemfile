@@ -58,5 +58,5 @@ gem 'redis'
 gem 'doorkeeper'
 #For serialize model attributes
 gem 'active_model_serializers', '~> 0.10.0'
-gem 'carrierwave', '~> 2.0'
+gem 'carrierwave', '~> 2.1'
 gem 'carrierwave-base64'
